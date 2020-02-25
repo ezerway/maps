@@ -1,0 +1,64 @@
+{
+  "name": "ezerway-maps",
+  "version": "0.0.1",
+  "description": "A wrapper maps component.",
+  "main": "./build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "storybook": "start-storybook",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ezerway/maps.git"
+  },
+  "keywords": [
+    "maps"
+  ],
+  "author": "Bob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ezerway/maps.git/issues"
+  },
+  "homepage": "https://github.com/ezerway/maps.git#readme",
+  "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/preset-react": "^7.7.4",
+    "@storybook/react": "^5.3.13",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.3.0",
+    "eslint": "5",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-react-app": "^5.2.0",
+    "eslint-plugin-flowtype": "^4.6.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^2.4.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "prettier": "^1.19.1",
+    "style-loader": "^1.0.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "google-map-react": "^1.1.6",
+    "leaflet": "^1.6.0",
+    "mapbox-gl": "^1.8.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-leaflet": "^2.6.1",
+    "react-map-gl": "^5.2.3"
+  }
+}

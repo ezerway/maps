@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "prettier",
+    "prettier/flowtype",  // if you are using flow
+    "prettier/react"
+  ]
+}

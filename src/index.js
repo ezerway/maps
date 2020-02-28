@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Abstract from './components/abstract';
 import GoogleMap from './components/google-map';
 import LeafletMap from './components/leaflet-map';
 import Mapbox from './components/mapbox';
-import MarkerIcon from './styles/images/marker.svg';
 
 /**
  *
@@ -11,10 +11,8 @@ import MarkerIcon from './styles/images/marker.svg';
  * @param isEnableLeaflet
  * @param isEnableMapbox
  * @param config
- * @param markerIcon
- * @param defaultZoom
- * @param lineColor
  * @param places
+ * @param selected
  * @return {*}
  * @constructor
  */
@@ -23,19 +21,18 @@ function Maps({
   isEnableLeaflet,
   isEnableMapbox,
   config,
-  markerIcon,
-  defaultZoom,
-  lineColor,
-  places
+  places,
+  selected
 }) {
+
+  const mapConfig = {...Abstract.defaultProps.config, ...config};
+
   if (isEnableGoogleMap) {
     return (
       <GoogleMap
         places={places}
-        markerIcon={markerIcon}
-        defaultZoom={defaultZoom}
-        lineColor={lineColor}
-        config={config}
+        selected={selected}
+        config={mapConfig}
       />
     );
   }
@@ -43,10 +40,8 @@ function Maps({
     return (
       <LeafletMap
         places={places}
-        markerIcon={markerIcon}
-        defaultZoom={defaultZoom}
-        lineColor={lineColor}
-        config={config}
+        selected={selected}
+        config={mapConfig}
       />
     );
   }
@@ -54,10 +49,8 @@ function Maps({
     return (
       <Mapbox
         places={places}
-        markerIcon={markerIcon}
-        defaultZoom={defaultZoom}
-        lineColor={lineColor}
-        config={config}
+        selected={selected}
+        config={mapConfig}
       />
     );
   }
@@ -68,21 +61,14 @@ Maps.propTypes = {
   isEnableGoogleMap: PropTypes.bool,
   isEnableLeaflet: PropTypes.bool,
   isEnableMapbox: PropTypes.bool,
-  config: PropTypes.oneOfType([PropTypes.object]),
-  markerIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  defaultZoom: PropTypes.number,
-  lineColor: PropTypes.string,
-  places: PropTypes.arrayOf(PropTypes.object)
+  ...Abstract.propTypes
 };
 
 Maps.defaultProps = {
+  ...Abstract.defaultProps,
   isEnableGoogleMap: false,
   isEnableLeaflet: false,
   isEnableMapbox: false,
-  markerIcon: MarkerIcon,
-  defaultZoom: 8,
-  lineColor: '#BF93E4',
-  places: []
 };
 
 export default Maps;

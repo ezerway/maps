@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import Abstract from './abstract';
 import { icon } from 'leaflet';
 import {
   Map,
@@ -12,14 +12,13 @@ import {
 import * as Position from '../utils/position';
 import { getCenterPosition, toArray } from '../utils/leaflet-map';
 import 'leaflet/dist/leaflet.css';
-import MarkerIcon from '../styles/images/marker.svg';
 
-function Leaflet({ markerIcon, defaultZoom, lineColor, places }) {
+function Leaflet({ config, places, selected }) {
   const [mapRef, setMapRef] = useState(false);
   const [groupRef, setGroupRef] = useState(false);
   const [mkIcon] = useState(
     icon({
-      iconUrl: markerIcon,
+      iconUrl: config.markerIcon,
       iconSize: [38, 95], // size of the icon
       shadowSize: [50, 64], // size of the shadow
       iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
@@ -29,8 +28,8 @@ function Leaflet({ markerIcon, defaultZoom, lineColor, places }) {
   );
   const [centerPosition] = useState(getCenterPosition(places));
   const [geoJsonStyle] = useState({
-    color: lineColor,
-    weight: 5
+    color: config.lineColor,
+    weight: config.lineWeight
   });
   const [geoJson] = useState([
     {
@@ -42,7 +41,7 @@ function Leaflet({ markerIcon, defaultZoom, lineColor, places }) {
           geometry: {
             type: 'LineString',
 
-            coordinates: Position.toArray(places)
+            coordinates: Position.toArray(selected.length ? selected : places)
           }
         }
       ]
@@ -63,7 +62,7 @@ function Leaflet({ markerIcon, defaultZoom, lineColor, places }) {
   return (
     <Map
       center={centerPosition}
-      zoom={defaultZoom}
+      zoom={config.defaultZoom}
       ref={ref => ref && setMapRef(ref)}
       style={{ width: '100%', height: '100vh' }}
     >
@@ -85,18 +84,7 @@ function Leaflet({ markerIcon, defaultZoom, lineColor, places }) {
   );
 }
 
-Leaflet.propTypes = {
-  places: PropTypes.arrayOf(PropTypes.object),
-  config: PropTypes.oneOfType([PropTypes.object]),
-  markerIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  defaultZoom: PropTypes.number,
-  lineColor: PropTypes.string
-};
-
-Leaflet.defaultProps = {
-  places: [],
-  markerIcon: MarkerIcon,
-  config: {}
-};
+Leaflet.propTypes = Abstract.propTypes;
+Leaflet.defaultProps = Abstract.defaultProps;
 
 export default Leaflet;

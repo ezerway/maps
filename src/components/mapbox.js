@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import Abstract from './abstract';
 import ReactMapGL, { Marker, WebMercatorViewport } from 'react-map-gl';
 import { getCenterPosition, toArray } from '../utils/position';
 import { toBounds } from '../utils/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import MarkerIcon from '../styles/images/marker.svg';
 
-function Mapbox({ places, markerIcon, defaultZoom, lineColor, config }) {
+function Mapbox({ places, selected, config }) {
   const [map, setMap] = useState(false);
   const [centerPosition] = useState(getCenterPosition(places));
   const [viewport, setViewport] = useState({
     ...{
       ...config.viewport,
-      zoom: defaultZoom
+      zoom: config.defaultZoom
     },
     ...centerPosition
   });
@@ -53,7 +52,7 @@ function Mapbox({ places, markerIcon, defaultZoom, lineColor, config }) {
             geometry: {
               type: 'LineString',
               properties: {},
-              coordinates: toArray(places)
+              coordinates: toArray(selected.length ? selected : places)
             }
           }
         ]
@@ -71,8 +70,8 @@ function Mapbox({ places, markerIcon, defaultZoom, lineColor, config }) {
           'line-cap': 'round'
         },
         paint: {
-          'line-color': lineColor,
-          'line-width': 5
+          'line-color': config.lineColor,
+          'line-width': config.lineWeight
         }
       });
     });
@@ -91,7 +90,7 @@ function Mapbox({ places, markerIcon, defaultZoom, lineColor, config }) {
       {places.map((place, key) => (
         <Marker key={key} latitude={place.latitude} longitude={place.longitude}>
           <div>
-            <img alt="marker" src={markerIcon} style={{ width: '4vh' }} />
+            <img alt="marker" src={config.markerIcon} style={{ width: '4vh' }} />
             {place.title}
           </div>
         </Marker>
@@ -100,24 +99,7 @@ function Mapbox({ places, markerIcon, defaultZoom, lineColor, config }) {
   );
 }
 
-Mapbox.propTypes = {
-  places: PropTypes.arrayOf(PropTypes.object),
-  config: PropTypes.oneOfType([PropTypes.object]),
-  markerIcon: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  defaultZoom: PropTypes.number,
-  lineColor: PropTypes.string
-};
-
-Mapbox.defaultProps = {
-  places: [],
-  markerIcon: MarkerIcon,
-  config: {
-    viewport: {
-      latitude: 0,
-      longitude: 0
-    }
-    // accessToken: 'pk.eyJ1IjoiaHVuZzE5OTZoeSIsImEiOiJjazcxa2djbngwNnNqM21ubXV1bDhyaXM1In0.G8lSCFr-AIHLyakEjSy9Mg'
-  }
-};
+Mapbox.propTypes = Abstract.propTypes;
+Mapbox.defaultProps = Abstract.defaultProps;
 
 export default Mapbox;

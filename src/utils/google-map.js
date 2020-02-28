@@ -21,3 +21,78 @@ export const getCenterPosition = (places = []) => {
 export const toArray = (places = []) => {
   return places.map(({ latitude, longitude }) => [latitude, longitude]);
 };
+
+/**
+ * Return map bounds based on list of places
+ *
+ * @param map
+ * @param maps
+ * @param places
+ * @return {maps}
+ */
+export function getMapBounds(map, maps, places) {
+  const bounds = new maps.LatLngBounds();
+
+  places.forEach(place => {
+    bounds.extend(new maps.LatLng(place.latitude, place.longitude));
+  });
+  return bounds;
+}
+
+/**
+ * Re-center map when resizing the window
+ *
+ * @param map
+ * @param maps
+ * @param bounds
+ */
+export function bindResizeListener(map, maps, bounds) {
+  maps.event.addDomListenerOnce(map, 'idle', () => {
+    maps.event.addDomListener(window, 'resize', () => {
+      map.fitBounds(bounds);
+    });
+  });
+}
+
+/**
+ * Fit map to its bounds after the api is loaded
+ *
+ * @param map
+ * @param maps
+ * @param places
+ */
+export function apiIsLoaded(map, maps, places) {
+  // Get bounds by our places
+  const bounds = getMapBounds(map, maps, places);
+  // Fit map to bounds
+  map.fitBounds(bounds);
+  // Bind the resize listener
+  bindResizeListener(map, maps, bounds);
+}
+
+/**
+ *
+ * @param places
+ * @param map
+ * @param maps
+ * @param config
+ */
+export function renderPolylines(places, map, maps, config) {
+  let path = [];
+
+  position.toArray(places).forEach(function (location) {
+    let pathLatLong = {
+      lat: location[1],
+      lng: location[0]
+    };
+    path.push(pathLatLong);
+  });
+
+  let drawnPolyline = new maps.Polyline({
+    strokeColor: config.lineColor,
+    strokeOpacity: 1,
+    strokeWeight: config.lineWeight,
+    path: path //decodedPolyline.geometry.coordinates
+  });
+  drawnPolyline.setMap(map);
+}

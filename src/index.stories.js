@@ -3,7 +3,6 @@ import Maps from './index';
 
 export default { title: 'Maps' };
 
-
 const places = [
     {
         longitude: -77.0366048812866,
@@ -66,6 +65,8 @@ const places = [
     // ]
 ];
 
+const selected = [places[0], places[1], places[2], places[3], places[4]];
+
 const config = {
     api_key: 'AIzaSyABi2Ci0aHYQSWeEQmP8J9asSyEpqNNmig',
     viewport: {
@@ -78,3 +79,4 @@ const config = {
 export const GoogleMap = () => <Maps isEnableGoogleMap={true} places={places} config={config} />;
 export const Mapbox = () => <Maps isEnableMapbox={true} places={places} config={config} />;
 export const Leaflet = () => <Maps isEnableLeaflet={true} places={places} config={config} />;
+export const SelectedPlaces = () => <Maps isEnableMapbox={true} places={places} selected={selected} config={config} />;

@@ -1,8 +1,8 @@
 {
   "name": "ezerway-maps",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A wrapper maps component.",
-  "main": "./build/index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/ezerway/maps.git#readme",
   "devDependencies": {
+    "react": ">=16.12.0",
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
@@ -54,12 +55,14 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
+  "peerDependencies": {
+    "react": ">=16.12.0"
+  },
   "dependencies": {
     "google-map-react": "^1.1.6",
     "leaflet": "^1.6.0",
     "mapbox-gl": "^1.8.0",
     "prop-types": "^15.7.2",
-    "react": "^16.12.0",
     "react-leaflet": "^2.6.1",
     "react-map-gl": "^5.2.3"
   }

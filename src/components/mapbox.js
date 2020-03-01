@@ -20,6 +20,11 @@ function Mapbox({ places, selected, config }) {
     if (!viewport || !viewport.width) {
       return () => {};
     }
+
+    if (!places.length) {
+      return () => {};
+    }
+
     const { longitude, latitude, zoom } = new WebMercatorViewport(
       viewport
     ).fitBounds(toBounds(places), {
@@ -35,7 +40,23 @@ function Mapbox({ places, selected, config }) {
       zoom
     });
     return () => {};
-  }, [viewport]);
+  }, [viewport, places]);
+
+  const getGeoJson = () => {
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            properties: {},
+            coordinates: toArray(selected.length ? selected : places)
+          }
+        }
+      ]
+    };
+  };
 
   useEffect(() => {
     if (!map) {
@@ -44,22 +65,9 @@ function Mapbox({ places, selected, config }) {
 
     map.on('load', function() {
       // A GeoJSON object with a LineString route from the White House to Capitol Hill
-      const geojson = {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'LineString',
-              properties: {},
-              coordinates: toArray(selected.length ? selected : places)
-            }
-          }
-        ]
-      };
       map.addSource('LineString', {
         type: 'geojson',
-        data: geojson
+        data: getGeoJson()
       });
       map.addLayer({
         id: 'LineString',
@@ -78,11 +86,24 @@ function Mapbox({ places, selected, config }) {
     return () => {};
   }, [map]);
 
+  useEffect(() => {
+    if (!map) {
+      return () => {};
+    }
+    if (!map.getSource('LineString')) {
+      return () => {};
+    }
+
+    map.getSource('LineString').setData(getGeoJson());
+
+    return () => {};
+  }, [selected, map]);
+
   return (
     <ReactMapGL
       {...viewport}
       ref={ref => ref && setMap(ref.getMap())}
-      width="100vw" // It always override the view(viewport) width state.
+      width="100%" // It always override the view(viewport) width state.
       height="100vh" // It always override the view(viewport) height state.
       mapboxApiAccessToken={config.accessToken}
       onViewportChange={setViewport}
@@ -90,7 +111,11 @@ function Mapbox({ places, selected, config }) {
       {places.map((place, key) => (
         <Marker key={key} latitude={place.latitude} longitude={place.longitude}>
           <div>
-            <img alt="marker" src={config.markerIcon} style={{ width: '4vh' }} />
+            <img
+              alt="marker"
+              src={config.markerIcon}
+              style={{ width: '4vh' }}
+            />
             {place.title}
           </div>
         </Marker>

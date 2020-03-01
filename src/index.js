@@ -24,35 +24,18 @@ function Maps({
   places,
   selected
 }) {
-
-  const mapConfig = {...Abstract.defaultProps.config, ...config};
+  const mapConfig = { ...Abstract.defaultProps.config, ...config };
 
   if (isEnableGoogleMap) {
-    return (
-      <GoogleMap
-        places={places}
-        selected={selected}
-        config={mapConfig}
-      />
-    );
+    return <GoogleMap places={places} selected={selected} config={mapConfig} />;
   }
   if (isEnableLeaflet) {
     return (
-      <LeafletMap
-        places={places}
-        selected={selected}
-        config={mapConfig}
-      />
+      <LeafletMap places={places} selected={selected} config={mapConfig} />
     );
   }
   if (isEnableMapbox) {
-    return (
-      <Mapbox
-        places={places}
-        selected={selected}
-        config={mapConfig}
-      />
-    );
+    return <Mapbox places={places} selected={selected} config={mapConfig} />;
   }
   return <p>Maps</p>;
 }
@@ -68,7 +51,7 @@ Maps.defaultProps = {
   ...Abstract.defaultProps,
   isEnableGoogleMap: false,
   isEnableLeaflet: false,
-  isEnableMapbox: false,
+  isEnableMapbox: false
 };
 
 export default Maps;

@@ -78,21 +78,26 @@ export function apiIsLoaded(map, maps, places) {
  * @param config
  */
 export function renderPolylines(places, map, maps, config) {
-  let path = [];
-
-  position.toArray(places).forEach(function (location) {
-    let pathLatLong = {
-      lat: location[1],
-      lng: location[0]
-    };
-    path.push(pathLatLong);
-  });
-
   let drawnPolyline = new maps.Polyline({
     strokeColor: config.lineColor,
     strokeOpacity: 1,
     strokeWeight: config.lineWeight,
-    path: path //decodedPolyline.geometry.coordinates
+    path: placesToPath(places) //decodedPolyline.geometry.coordinates
   });
   drawnPolyline.setMap(map);
+  return drawnPolyline;
+}
+
+/**
+ *
+ * @param places
+ * @return {{lng: *, lat: *}[]}
+ */
+export function placesToPath(places) {
+  return position.toArray(places).map(function(location) {
+    return {
+      lat: location[1],
+      lng: location[0]
+    };
+  });
 }

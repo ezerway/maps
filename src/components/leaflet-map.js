@@ -31,25 +31,36 @@ function Leaflet({ config, places, selected }) {
     color: config.lineColor,
     weight: config.lineWeight
   });
-  const [geoJson] = useState([
-    {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
+  const [geoJson, setGeoJson] = useState([]);
+  const [updatedAt, setUpdatedAt] = useState(Date.now());
 
-            coordinates: Position.toArray(selected.length ? selected : places)
+  useEffect(() => {
+    setGeoJson([
+      {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: Position.toArray(selected.length ? selected : places)
+            }
           }
-        }
-      ]
-    }
-  ]);
+        ]
+      }
+    ]);
+
+    setUpdatedAt(Date.now());
+    return () => {};
+  }, [selected]);
 
   useEffect(() => {
     if (!mapRef || !groupRef) {
+      return () => {};
+    }
+
+    if (!places.length) {
       return () => {};
     }
 
@@ -57,7 +68,7 @@ function Leaflet({ config, places, selected }) {
     const group = groupRef.leafletElement; //get native featureGroup instance
     map.fitBounds(group.getBounds());
     return () => {};
-  }, [mapRef, groupRef]);
+  }, [mapRef, groupRef, places]);
 
   return (
     <Map
@@ -73,12 +84,10 @@ function Leaflet({ config, places, selected }) {
       <FeatureGroup ref={ref => ref && setGroupRef(ref)}>
         {toArray(places).map((position, key) => (
           <Marker key={key} position={position} icon={mkIcon}>
-            <Popup>
-              {places[key].title}
-            </Popup>
+            <Popup>{places[key].title}</Popup>
           </Marker>
         ))}
-        <GeoJSON data={geoJson} style={geoJsonStyle} />
+        <GeoJSON key={updatedAt} data={geoJson} style={geoJsonStyle} />
       </FeatureGroup>
     </Map>
   );
